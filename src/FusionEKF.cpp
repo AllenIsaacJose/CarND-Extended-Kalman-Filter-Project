@@ -96,7 +96,15 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       /**
       Initialize state.
       */
-      ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
+      float px = measurement_pack.raw_measurements_[0];
+      float py = measurement_pack.raw_measurements_[1];
+
+      if (px == 0 || py == 0){
+        cout << "Ignoring empty laser measurement" << endl;
+        return;
+      }
+
+      ekf_.x_ << px, py, 0, 0;
     }
 
     // done initializing, no need to predict or update
@@ -162,6 +170,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   }
 
   // print the output
-  // cout << "x_ = " << ekf_.x_ << endl;
-  // cout << "P_ = " << ekf_.P_ << endl;
+  cout << "x_ = " << ekf_.x_ << endl;
+  cout << "P_ = " << ekf_.P_ << endl;
 }
