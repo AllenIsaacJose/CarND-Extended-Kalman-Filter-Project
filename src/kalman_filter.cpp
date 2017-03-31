@@ -1,7 +1,10 @@
 #include "kalman_filter.h"
+#include <iostream>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
+using std::cout;
+using std::endl;
 
 KalmanFilter::KalmanFilter() {}
 
@@ -58,6 +61,13 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   float vy = x_(3);
 
   float range = sqrt(px*px + py*py);
+	
+  //check division by zero
+  if (fabs(px) < 0.0001 || fabs(range) < 0.0001) {
+    cout << "UpdateEKF () - Error - Division by Zero" << endl;
+    return;
+  }
+
   float angle = atan(py/px);
   float range_rate = (px*vx + py*vy) / range;
 
